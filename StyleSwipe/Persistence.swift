@@ -3,6 +3,7 @@
 //  StyleSwipe
 //
 //  Created by Ayush Krishnappa on 9/13/24.
+//  edited by rylan 9/20
 //
 
 import CoreData
