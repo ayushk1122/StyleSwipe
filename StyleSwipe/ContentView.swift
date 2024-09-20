@@ -9,7 +9,7 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         VStack {
-            Text("Style Swipe")
+            Text("StyleSwipe")
                 .font(.largeTitle)  // Large font for the main title
                 .fontWeight(.bold)  // Makes the text bold
                 .padding(.bottom, 10)  // Adds some space between the two texts
