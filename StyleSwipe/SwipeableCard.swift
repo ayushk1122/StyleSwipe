@@ -16,15 +16,36 @@ class SwipeableCard: UIView {
         imageView.layer.cornerRadius = 10
         return imageView
     }()
+    
+    // Back view for displaying item information
+    let backView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.layer.cornerRadius = 10
+        view.isHidden = true  // Start with the back view hidden
+        return view
+    }()
+    
+    let infoLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Item Info"
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        return label
+    }()
+    
+    var isFlipped = false  // Track the current state of the card (flipped or not)
 
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
+        setupTapGesture()  // Set up tap gesture to flip the card
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupView()
+        setupTapGesture()
     }
 
     private func setupView() {
@@ -35,8 +56,8 @@ class SwipeableCard: UIView {
         self.layer.shadowOffset = CGSize(width: 0, height: 3)
         self.layer.shadowRadius = 4
         
+        // Add front view (image)
         addSubview(imageView)
-        
         imageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: self.topAnchor),
@@ -45,8 +66,45 @@ class SwipeableCard: UIView {
             imageView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
         ])
         
-        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
-        self.addGestureRecognizer(panGesture)
+        // Add back view (info)
+        addSubview(backView)
+        backView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            backView.topAnchor.constraint(equalTo: self.topAnchor),
+            backView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            backView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            backView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+        ])
+        
+        // Add label to back view
+        backView.addSubview(infoLabel)
+        infoLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            infoLabel.centerXAnchor.constraint(equalTo: backView.centerXAnchor),
+            infoLabel.centerYAnchor.constraint(equalTo: backView.centerYAnchor),
+            infoLabel.widthAnchor.constraint(equalTo: backView.widthAnchor, multiplier: 0.8)
+        ])
+    }
+
+    // Add tap gesture recognizer for flipping the card
+    private func setupTapGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleCardTap))
+        self.addGestureRecognizer(tapGesture)
+    }
+
+    @objc private func handleCardTap() {
+        flipCard()
+    }
+
+    // Flip the card between front and back
+    private func flipCard() {
+        let fromView = isFlipped ? backView : imageView
+        let toView = isFlipped ? imageView : backView
+
+        // Animate the flip
+        UIView.transition(from: fromView, to: toView, duration: 0.5, options: [.transitionFlipFromRight, .showHideTransitionViews]) { _ in
+            self.isFlipped.toggle()  // Toggle the flipped state
+        }
     }
 
     @objc private func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
