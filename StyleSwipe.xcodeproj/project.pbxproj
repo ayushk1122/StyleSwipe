@@ -9,8 +9,6 @@
 /* Begin PBXBuildFile section */
 		833F47112CAD905E00248B3E /* SwipeableCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833F47102CAD905E00248B3E /* SwipeableCard.swift */; };
 		833F47132CAD907800248B3E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833F47122CAD907800248B3E /* ViewController.swift */; };
-		833F47172CAD9DF700248B3E /* test_clothing_image.png in Resources */ = {isa = PBXBuildFile; fileRef = 833F47162CAD9DF700248B3E /* test_clothing_image.png */; };
-		833F47192CADA92E00248B3E /* StyleSwipe log.png in Resources */ = {isa = PBXBuildFile; fileRef = 833F47182CADA92E00248B3E /* StyleSwipe log.png */; };
 		839658D62C94BC8A00689BE9 /* StyleSwipeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839658D52C94BC8A00689BE9 /* StyleSwipeApp.swift */; };
 		839658D82C94BC8A00689BE9 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839658D72C94BC8A00689BE9 /* Persistence.swift */; };
 		839658DB2C94BC8A00689BE9 /* StyleSwipe.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 839658D92C94BC8A00689BE9 /* StyleSwipe.xcdatamodeld */; };
@@ -42,8 +40,6 @@
 /* Begin PBXFileReference section */
 		833F47102CAD905E00248B3E /* SwipeableCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeableCard.swift; sourceTree = "<group>"; };
 		833F47122CAD907800248B3E /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		833F47162CAD9DF700248B3E /* test_clothing_image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = test_clothing_image.png; path = ../../../test_clothing_image.png; sourceTree = "<group>"; };
-		833F47182CADA92E00248B3E /* StyleSwipe log.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "StyleSwipe log.png"; path = "../../../../Downloads/StyleSwipe log.png"; sourceTree = "<group>"; };
 		839658D22C94BC8A00689BE9 /* StyleSwipe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StyleSwipe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		839658D52C94BC8A00689BE9 /* StyleSwipeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleSwipeApp.swift; sourceTree = "<group>"; };
 		839658D72C94BC8A00689BE9 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
@@ -107,8 +103,6 @@
 		839658D42C94BC8A00689BE9 /* StyleSwipe */ = {
 			isa = PBXGroup;
 			children = (
-				833F47182CADA92E00248B3E /* StyleSwipe log.png */,
-				833F47162CAD9DF700248B3E /* test_clothing_image.png */,
 				839658D52C94BC8A00689BE9 /* StyleSwipeApp.swift */,
 				839658D72C94BC8A00689BE9 /* Persistence.swift */,
 				839658DC2C94BC8A00689BE9 /* ContentView.swift */,
@@ -251,8 +245,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				833F47192CADA92E00248B3E /* StyleSwipe log.png in Resources */,
-				833F47172CAD9DF700248B3E /* test_clothing_image.png in Resources */,
 				839658E32C94BC8C00689BE9 /* Preview Assets.xcassets in Resources */,
 				839658DF2C94BC8C00689BE9 /* Assets.xcassets in Resources */,
 			);
