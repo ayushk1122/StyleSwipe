@@ -127,7 +127,7 @@ struct ContentView: View {
                         Image(systemName: "person.fill")
                     }
             }
-            .frame(height: 60)  
+            .frame(height: 60)
             .padding(.bottom, -100)
             .padding(.top, 60)
 

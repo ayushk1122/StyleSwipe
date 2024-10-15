@@ -13,7 +13,7 @@ struct StyleSwipeApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            LoginSignUpView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
