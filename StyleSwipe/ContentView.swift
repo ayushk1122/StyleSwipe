@@ -19,7 +19,49 @@ struct SwipeViewControllerRepresentable: UIViewControllerRepresentable {
 struct ContentView: View {
     @State private var viewController: ViewController? = nil
     @State private var selectedTab: Int = 0 // Track the selected tab
+    @State private var viewController: ViewController? = nil  // Store the reference to ViewController
+    @State private var showSplashScreen = true  // State to manage splash screen visibility
 
+    var body: some View {
+        ZStack {
+            if showSplashScreen {
+                SplashScreenView()
+                    .transition(.opacity)  // Add a fade transition effect
+            } else {
+                MainContentView(viewController: $viewController)
+            }
+        }
+        .onAppear {
+            // Hide splash screen after 1 second
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                withAnimation {
+                    showSplashScreen = false
+                }
+            }
+        }
+    }
+}
+
+struct SplashScreenView: View {
+    var body: some View {
+        VStack {
+            Spacer()
+            
+            Image("StyleSwipeFullLogo")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 400, height: 400)  // Adjust size as needed
+            
+            Spacer()
+        }
+        .background(Color.white)  // Optional: Set background color
+        .edgesIgnoringSafeArea(.all)  // Ensure the splash screen covers the entire screen
+    }
+}
+
+struct MainContentView: View {
+    @Binding var viewController: ViewController?
+    
     var body: some View {
         VStack {
             HStack {
