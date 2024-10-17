@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		833F47112CAD905E00248B3E /* SwipeableCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833F47102CAD905E00248B3E /* SwipeableCard.swift */; };
 		833F47132CAD907800248B3E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833F47122CAD907800248B3E /* ViewController.swift */; };
+		833F471B2CB5B4C900248B3E /* FavoritesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833F471A2CB5B4C900248B3E /* FavoritesView.swift */; };
 		839658D62C94BC8A00689BE9 /* StyleSwipeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839658D52C94BC8A00689BE9 /* StyleSwipeApp.swift */; };
 		839658D82C94BC8A00689BE9 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839658D72C94BC8A00689BE9 /* Persistence.swift */; };
 		839658DB2C94BC8A00689BE9 /* StyleSwipe.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 839658D92C94BC8A00689BE9 /* StyleSwipe.xcdatamodeld */; };
@@ -40,6 +41,7 @@
 /* Begin PBXFileReference section */
 		833F47102CAD905E00248B3E /* SwipeableCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeableCard.swift; sourceTree = "<group>"; };
 		833F47122CAD907800248B3E /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		833F471A2CB5B4C900248B3E /* FavoritesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesView.swift; sourceTree = "<group>"; };
 		839658D22C94BC8A00689BE9 /* StyleSwipe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StyleSwipe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		839658D52C94BC8A00689BE9 /* StyleSwipeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleSwipeApp.swift; sourceTree = "<group>"; };
 		839658D72C94BC8A00689BE9 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
@@ -112,6 +114,7 @@
 				839658E12C94BC8C00689BE9 /* Preview Content */,
 				833F47102CAD905E00248B3E /* SwipeableCard.swift */,
 				833F47122CAD907800248B3E /* ViewController.swift */,
+				833F471A2CB5B4C900248B3E /* FavoritesView.swift */,
 			);
 			path = StyleSwipe;
 			sourceTree = "<group>";
@@ -275,6 +278,7 @@
 				833F47112CAD905E00248B3E /* SwipeableCard.swift in Sources */,
 				839658D62C94BC8A00689BE9 /* StyleSwipeApp.swift in Sources */,
 				839658D82C94BC8A00689BE9 /* Persistence.swift in Sources */,
+				833F471B2CB5B4C900248B3E /* FavoritesView.swift in Sources */,
 				839658DD2C94BC8A00689BE9 /* ContentView.swift in Sources */,
 				839658DB2C94BC8A00689BE9 /* StyleSwipe.xcdatamodeld in Sources */,
 			);
