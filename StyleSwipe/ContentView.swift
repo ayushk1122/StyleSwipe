@@ -19,7 +19,6 @@ struct SwipeViewControllerRepresentable: UIViewControllerRepresentable {
 struct ContentView: View {
     @State private var viewController: ViewController? = nil
     @State private var selectedTab: Int = 0 // Track the selected tab
-    @State private var viewController: ViewController? = nil  // Store the reference to ViewController
     @State private var showSplashScreen = true  // State to manage splash screen visibility
 
     var body: some View {
@@ -61,6 +60,7 @@ struct SplashScreenView: View {
 
 struct MainContentView: View {
     @Binding var viewController: ViewController?
+    @State private var selectedTab: Int = 0 // Track the selected tab
     
     var body: some View {
         VStack {
