@@ -20,7 +20,48 @@ struct SwipeViewControllerRepresentable: UIViewControllerRepresentable {
 
 struct ContentView: View {
     @State private var viewController: ViewController? = nil  // Store the reference to ViewController
+    @State private var showSplashScreen = true  // State to manage splash screen visibility
 
+    var body: some View {
+        ZStack {
+            if showSplashScreen {
+                SplashScreenView()
+                    .transition(.opacity)  // Add a fade transition effect
+            } else {
+                MainContentView(viewController: $viewController)
+            }
+        }
+        .onAppear {
+            // Hide splash screen after 1 second
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                withAnimation {
+                    showSplashScreen = false
+                }
+            }
+        }
+    }
+}
+
+struct SplashScreenView: View {
+    var body: some View {
+        VStack {
+            Spacer()
+            
+            Image("StyleSwipeFullLogo")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 400, height: 400)  // Adjust size as needed
+            
+            Spacer()
+        }
+        .background(Color.white)  // Optional: Set background color
+        .edgesIgnoringSafeArea(.all)  // Ensure the splash screen covers the entire screen
+    }
+}
+
+struct MainContentView: View {
+    @Binding var viewController: ViewController?
+    
     var body: some View {
         VStack {
             
@@ -92,7 +133,7 @@ struct ContentView: View {
                         )
                 }
             }
-            .padding(.horizontal, 40)  // Adjust spacing between buttons
+            .padding(.horizontal, 40)
             .frame(maxWidth: .infinity, alignment: .center)
             .padding(.bottom, 30)
             .padding(.top, 30)
@@ -127,10 +168,9 @@ struct ContentView: View {
                         Image(systemName: "person.fill")
                     }
             }
-            .frame(height: 60)  
+            .frame(height: 60)
             .padding(.bottom, -100)
             .padding(.top, 60)
-
         }
         .padding()
         .navigationBarHidden(true)

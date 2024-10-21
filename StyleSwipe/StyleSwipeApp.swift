@@ -23,11 +23,13 @@ struct StyleSwipeApp: App {
   @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
 
 
-  var body: some Scene {
-    WindowGroup {
-      NavigationView {
-        ContentView()
-      }
+
+    var body: some Scene {
+        WindowGroup {
+            LoginSignUpView()
+                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+        }
+
     }
   }
 }
