@@ -1,11 +1,5 @@
-//
-//  SwipeableCard.swift
-//  StyleSwipe
-//
-//  Created by Ayush Krishnappa on 10/2/24.
-//
-
 import UIKit
+import FirebaseFirestore
 
 class SwipeableCard: UIView {
 
@@ -17,35 +11,35 @@ class SwipeableCard: UIView {
         return imageView
     }()
     
-    // Back view for displaying item information
     let backView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
         view.layer.cornerRadius = 10
-        view.isHidden = true  // Start with the back view hidden
+        view.isHidden = true
         return view
     }()
     
     let infoLabel: UILabel = {
         let label = UILabel()
-        label.text = "Item Info"
         label.numberOfLines = 0
         label.textAlignment = .center
         return label
     }()
     
-    var isFlipped = false  // Track the current state of the card (flipped or not)
+    var isFlipped = false
 
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
-        setupTapGesture()  // Set up tap gesture to flip the card
+        setupTapGesture()
+        fetchCardData()
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupView()
         setupTapGesture()
+        fetchCardData()
     }
 
     private func setupView() {
@@ -56,7 +50,6 @@ class SwipeableCard: UIView {
         self.layer.shadowOffset = CGSize(width: 0, height: 3)
         self.layer.shadowRadius = 4
         
-        // Add front view (image)
         addSubview(imageView)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -66,7 +59,6 @@ class SwipeableCard: UIView {
             imageView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
         ])
         
-        // Add back view (info)
         addSubview(backView)
         backView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -76,7 +68,6 @@ class SwipeableCard: UIView {
             backView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
         ])
         
-        // Add label to back view
         backView.addSubview(infoLabel)
         infoLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -86,7 +77,6 @@ class SwipeableCard: UIView {
         ])
     }
 
-    // Add tap gesture recognizer for flipping the card
     private func setupTapGesture() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleCardTap))
         self.addGestureRecognizer(tapGesture)
@@ -96,17 +86,31 @@ class SwipeableCard: UIView {
         flipCard()
     }
 
-    // Flip the card between front and back
     private func flipCard() {
         let fromView = isFlipped ? backView : imageView
         let toView = isFlipped ? imageView : backView
 
-        // Animate the flip
         UIView.transition(from: fromView, to: toView, duration: 0.5, options: [.transitionFlipFromRight, .showHideTransitionViews]) { _ in
-            self.isFlipped.toggle()  // Toggle the flipped state
+            self.isFlipped.toggle()
         }
     }
 
+    private func fetchCardData() {
+        let db = Firestore.firestore()
+        db.collection("clothing").document("N8XgVVP3CuxVTbwYctwp").getDocument { [weak self] (document, error) in
+            guard let self = self else { return }
+            if let document = document, document.exists {
+                let data = document.data()
+                
+                if let brand = data?["Brand"] as? String {
+                    self.infoLabel.text = brand
+                }
+            } else {
+                print("Document does not exist or an error occurred: \(String(describing: error))")
+            }
+        }
+    }
+    
     @objc private func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
         let translation = gesture.translation(in: self.superview)
         self.center = CGPoint(x: self.center.x + translation.x, y: self.center.y + translation.y)
@@ -126,8 +130,6 @@ class SwipeableCard: UIView {
     }
 
     func swipeOffScreen(direction: SwipeDirection) {
-        print("Swiping off screen to the \(direction == .left ? "left" : "right")")
-
         let offScreenPoint: CGPoint
 
         if direction == .left {
@@ -140,7 +142,6 @@ class SwipeableCard: UIView {
             self.center = offScreenPoint
             self.alpha = 0
         }, completion: { _ in
-            print("Card removed from view")
             self.removeFromSuperview()
         })
     }
@@ -150,4 +151,3 @@ enum SwipeDirection {
     case left
     case right
 }
-
