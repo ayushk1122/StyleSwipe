@@ -6,10 +6,16 @@
 //
 
 import SwiftUI
+import FirebaseCore
 
 @main
 struct StyleSwipeApp: App {
     let persistenceController = PersistenceController.shared
+    
+    // Initialize Firebase when the app starts
+    init() {
+        FirebaseApp.configure()
+    }
 
     var body: some Scene {
         WindowGroup {

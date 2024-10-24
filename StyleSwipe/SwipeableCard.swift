@@ -1,11 +1,5 @@
-//
-//  SwipeableCard.swift
-//  StyleSwipe
-//
-//  Created by Ayush Krishnappa on 10/2/24.
-//
-
 import UIKit
+import FirebaseDatabase
 
 class SwipeableCard: UIView {
 
@@ -17,35 +11,37 @@ class SwipeableCard: UIView {
         return imageView
     }()
     
-    // Back view for displaying item information
     let backView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
         view.layer.cornerRadius = 10
-        view.isHidden = true  // Start with the back view hidden
+        view.isHidden = true // Initially hidden, will be shown on card flip
         return view
     }()
     
     let infoLabel: UILabel = {
         let label = UILabel()
-        label.text = "Item Info"
         label.numberOfLines = 0
         label.textAlignment = .center
+        label.textColor = .black
+        label.font = UIFont.systemFont(ofSize: 18, weight: .medium)
         return label
     }()
     
-    var isFlipped = false  // Track the current state of the card (flipped or not)
+    var isFlipped = false
 
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
-        setupTapGesture()  // Set up tap gesture to flip the card
+        setupTapGesture()
+        fetchCardData()
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupView()
         setupTapGesture()
+        fetchCardData()
     }
 
     private func setupView() {
@@ -86,7 +82,6 @@ class SwipeableCard: UIView {
         ])
     }
 
-    // Add tap gesture recognizer for flipping the card
     private func setupTapGesture() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleCardTap))
         self.addGestureRecognizer(tapGesture)
@@ -96,17 +91,41 @@ class SwipeableCard: UIView {
         flipCard()
     }
 
-    // Flip the card between front and back
     private func flipCard() {
         let fromView = isFlipped ? backView : imageView
         let toView = isFlipped ? imageView : backView
 
-        // Animate the flip
         UIView.transition(from: fromView, to: toView, duration: 0.5, options: [.transitionFlipFromRight, .showHideTransitionViews]) { _ in
-            self.isFlipped.toggle()  // Toggle the flipped state
+            self.isFlipped.toggle()
         }
     }
 
+    private func fetchCardData() {
+        print("Attempting to fetch data from Realtime Database...")
+        
+        let ref = Database.database().reference()
+        let userRef = ref.child("users").child("user1").child("name")
+        
+        userRef.observeSingleEvent(of: .value) { [weak self] snapshot in
+            guard let self = self else {
+                print("Self is nil, exiting fetchCardData")
+                return
+            }
+            
+            if let userName = snapshot.value as? String {
+                print("User Name: \(userName)")
+                DispatchQueue.main.async {
+                    self.infoLabel.text = userName
+                }
+            } else {
+                print("User Name field not found in Realtime Database.")
+            }
+        } withCancel: { error in
+            print("Failed to fetch data: \(error.localizedDescription)")
+        }
+    }
+
+    
     @objc private func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
         let translation = gesture.translation(in: self.superview)
         self.center = CGPoint(x: self.center.x + translation.x, y: self.center.y + translation.y)
@@ -126,8 +145,6 @@ class SwipeableCard: UIView {
     }
 
     func swipeOffScreen(direction: SwipeDirection) {
-        print("Swiping off screen to the \(direction == .left ? "left" : "right")")
-
         let offScreenPoint: CGPoint
 
         if direction == .left {
@@ -140,7 +157,6 @@ class SwipeableCard: UIView {
             self.center = offScreenPoint
             self.alpha = 0
         }, completion: { _ in
-            print("Card removed from view")
             self.removeFromSuperview()
         })
     }
@@ -150,4 +166,3 @@ enum SwipeDirection {
     case left
     case right
 }
-
