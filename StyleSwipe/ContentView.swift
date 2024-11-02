@@ -82,7 +82,7 @@ struct SplashScreenView: View {
                 .resizable()
                 .scaledToFit()
                 .frame(width: 400, height: 400)  // Adjust size as needed
-            
+             
             Spacer()
         }
         .background(Color.white)  // Optional: Set background color
