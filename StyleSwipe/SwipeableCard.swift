@@ -1,12 +1,18 @@
 import UIKit
-import FirebaseDatabase
 
 class SwipeableCard: UIView {
+    let imageContainerView: UIView = {
+        let container = UIView()
+        container.backgroundColor = .white
+        container.layer.cornerRadius = 10
+        container.layer.masksToBounds = true
+        return container
+    }()
+    
     let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 10
         return imageView
     }()
     
@@ -40,14 +46,12 @@ class SwipeableCard: UIView {
         return view
     }()
     
-    let infoLabel: UILabel = {
-        let label = UILabel()
-        label.numberOfLines = 0
-        label.textAlignment = .center
-        label.textColor = .black
-        label.font = UIFont.systemFont(ofSize: 18, weight: .medium)
-        return label
-    }()
+    let brandInfoLabel = UILabel()
+    let descriptionLabel = UILabel()
+    let genderLabel = UILabel()
+    let priceLabel = UILabel()
+    let categoryLabel = UILabel()
+    let sizesLabel = UILabel()
     
     var isFlipped = false
     
@@ -71,13 +75,23 @@ class SwipeableCard: UIView {
         self.layer.shadowOffset = CGSize(width: 0, height: 3)
         self.layer.shadowRadius = 4
         
-        addSubview(imageView)
+        // Image container and image
+        addSubview(imageContainerView)
+        imageContainerView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            imageContainerView.topAnchor.constraint(equalTo: self.topAnchor, constant: 20),
+            imageContainerView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20),
+            imageContainerView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20),
+            imageContainerView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -80)
+        ])
+        
+        imageContainerView.addSubview(imageView)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            imageView.topAnchor.constraint(equalTo: self.topAnchor),
-            imageView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-            imageView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            imageView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+            imageView.topAnchor.constraint(equalTo: imageContainerView.topAnchor),
+            imageView.bottomAnchor.constraint(equalTo: imageContainerView.bottomAnchor),
+            imageView.leadingAnchor.constraint(equalTo: imageContainerView.leadingAnchor),
+            imageView.trailingAnchor.constraint(equalTo: imageContainerView.trailingAnchor)
         ])
         
         addSubview(productNameLabel)
@@ -87,14 +101,12 @@ class SwipeableCard: UIView {
         brandLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            // Position product name label at the top
-            productNameLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 10),
+            productNameLabel.bottomAnchor.constraint(equalTo: brandLabel.topAnchor, constant: -5),
             productNameLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),
             productNameLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10),
             productNameLabel.heightAnchor.constraint(equalToConstant: 30),
             
-            // Position brand label below product name label
-            brandLabel.topAnchor.constraint(equalTo: productNameLabel.bottomAnchor, constant: 5),
+            brandLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10),
             brandLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),
             brandLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10),
             brandLabel.heightAnchor.constraint(equalToConstant: 25)
@@ -109,12 +121,44 @@ class SwipeableCard: UIView {
             backView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
         ])
         
-        backView.addSubview(infoLabel)
-        infoLabel.translatesAutoresizingMaskIntoConstraints = false
+        setupBackViewLabels()
+    }
+    
+    private func setupBackViewLabels() {
+        let labels = [brandInfoLabel, descriptionLabel, genderLabel, priceLabel, categoryLabel, sizesLabel]
+        
+        for label in labels {
+            label.numberOfLines = 0
+            label.textAlignment = .left
+            label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+            backView.addSubview(label)
+            label.translatesAutoresizingMaskIntoConstraints = false
+        }
+        
         NSLayoutConstraint.activate([
-            infoLabel.centerXAnchor.constraint(equalTo: backView.centerXAnchor),
-            infoLabel.centerYAnchor.constraint(equalTo: backView.centerYAnchor),
-            infoLabel.widthAnchor.constraint(equalTo: backView.widthAnchor, multiplier: 0.8)
+            brandInfoLabel.topAnchor.constraint(equalTo: backView.topAnchor, constant: 20),
+            brandInfoLabel.leadingAnchor.constraint(equalTo: backView.leadingAnchor, constant: 20),
+            brandInfoLabel.trailingAnchor.constraint(equalTo: backView.trailingAnchor, constant: -20),
+            
+            descriptionLabel.topAnchor.constraint(equalTo: brandInfoLabel.bottomAnchor, constant: 10),
+            descriptionLabel.leadingAnchor.constraint(equalTo: backView.leadingAnchor, constant: 20),
+            descriptionLabel.trailingAnchor.constraint(equalTo: backView.trailingAnchor, constant: -20),
+            
+            genderLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 10),
+            genderLabel.leadingAnchor.constraint(equalTo: backView.leadingAnchor, constant: 20),
+            genderLabel.trailingAnchor.constraint(equalTo: backView.trailingAnchor, constant: -20),
+            
+            priceLabel.topAnchor.constraint(equalTo: genderLabel.bottomAnchor, constant: 10),
+            priceLabel.leadingAnchor.constraint(equalTo: backView.leadingAnchor, constant: 20),
+            priceLabel.trailingAnchor.constraint(equalTo: backView.trailingAnchor, constant: -20),
+            
+            categoryLabel.topAnchor.constraint(equalTo: priceLabel.bottomAnchor, constant: 10),
+            categoryLabel.leadingAnchor.constraint(equalTo: backView.leadingAnchor, constant: 20),
+            categoryLabel.trailingAnchor.constraint(equalTo: backView.trailingAnchor, constant: -20),
+            
+            sizesLabel.topAnchor.constraint(equalTo: categoryLabel.bottomAnchor, constant: 10),
+            sizesLabel.leadingAnchor.constraint(equalTo: backView.leadingAnchor, constant: 20),
+            sizesLabel.trailingAnchor.constraint(equalTo: backView.trailingAnchor, constant: -20)
         ])
     }
 
@@ -128,15 +172,15 @@ class SwipeableCard: UIView {
     }
 
     private func flipCard() {
-        let fromView = isFlipped ? backView : imageView
-        let toView = isFlipped ? imageView : backView
+        let fromView = isFlipped ? backView : imageContainerView
+        let toView = isFlipped ? imageContainerView : backView
 
         UIView.transition(from: fromView, to: toView, duration: 0.5, options: [.transitionFlipFromRight, .showHideTransitionViews]) { _ in
             self.isFlipped.toggle()
         }
     }
 
-    // Update card with product information, including product name
+    // Update card with product information
     func updateCard(with product: [String: Any], name: String) {
         let brand = product["Brand"] as? String ?? "Unknown Brand"
         let description = product["Description"] as? String ?? "No description available"
@@ -144,25 +188,30 @@ class SwipeableCard: UIView {
         let price = product["Price"] as? Int ?? 0
         let category = product["Product Category"] as? String ?? "Unknown Category"
         let sizes = product["Sizes"] as? String ?? "Sizes not available"
+        let imageURLString = product["Clothing AWS URL"] as? String
 
-        // Update the product name and brand labels on the front
         DispatchQueue.main.async {
             self.productNameLabel.text = name
             self.brandLabel.text = brand
+            
+            self.brandInfoLabel.text = "Brand: \(brand)"
+            self.descriptionLabel.text = "Description: \(description)"
+            self.genderLabel.text = "Gender: \(gender)"
+            self.priceLabel.text = "Price: $\(price)"
+            self.categoryLabel.text = "Category: \(category)"
+            self.sizesLabel.text = "Available Sizes: \(sizes)"
         }
 
-        let productInfo = """
-        Brand: \(brand)
-        Description: \(description)
-        Gender: \(gender)
-        Price: $\(price)
-        Category: \(category)
-        Sizes: \(sizes)
-        """
-        
-        // Update the label text on the back view
-        DispatchQueue.main.async {
-            self.infoLabel.text = productInfo
+        if let imageURLString = imageURLString, let imageURL = URL(string: imageURLString) {
+            URLSession.shared.dataTask(with: imageURL) { data, response, error in
+                if let data = data, error == nil, let image = UIImage(data: data) {
+                    DispatchQueue.main.async {
+                        self.imageView.image = image
+                    }
+                } else {
+                    print("Failed to load image: \(error?.localizedDescription ?? "Unknown error")")
+                }
+            }.resume()
         }
     }
     
