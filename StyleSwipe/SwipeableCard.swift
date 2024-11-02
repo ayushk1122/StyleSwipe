@@ -2,7 +2,6 @@ import UIKit
 import FirebaseDatabase
 
 class SwipeableCard: UIView {
-
     let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
@@ -11,11 +10,33 @@ class SwipeableCard: UIView {
         return imageView
     }()
     
+    let brandLabel: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.textColor = .white
+        label.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
+        label.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        label.layer.cornerRadius = 5
+        label.clipsToBounds = true
+        return label
+    }()
+    
+    let productNameLabel: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.textColor = .white
+        label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        label.backgroundColor = UIColor.black.withAlphaComponent(0.7)
+        label.layer.cornerRadius = 5
+        label.clipsToBounds = true
+        return label
+    }()
+    
     let backView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
         view.layer.cornerRadius = 10
-        view.isHidden = true // Initially hidden, will be shown on card flip
+        view.isHidden = true
         return view
     }()
     
@@ -29,21 +50,19 @@ class SwipeableCard: UIView {
     }()
     
     var isFlipped = false
-
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
         setupTapGesture()
-        fetchCardData()
     }
-
+    
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupView()
         setupTapGesture()
-        fetchCardData()
     }
-
+    
     private func setupView() {
         self.backgroundColor = .white
         self.layer.cornerRadius = 10
@@ -52,7 +71,6 @@ class SwipeableCard: UIView {
         self.layer.shadowOffset = CGSize(width: 0, height: 3)
         self.layer.shadowRadius = 4
         
-        // Add front view (image)
         addSubview(imageView)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -62,7 +80,26 @@ class SwipeableCard: UIView {
             imageView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
         ])
         
-        // Add back view (info)
+        addSubview(productNameLabel)
+        addSubview(brandLabel)
+        
+        productNameLabel.translatesAutoresizingMaskIntoConstraints = false
+        brandLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            // Position product name label at the top
+            productNameLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 10),
+            productNameLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),
+            productNameLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10),
+            productNameLabel.heightAnchor.constraint(equalToConstant: 30),
+            
+            // Position brand label below product name label
+            brandLabel.topAnchor.constraint(equalTo: productNameLabel.bottomAnchor, constant: 5),
+            brandLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),
+            brandLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10),
+            brandLabel.heightAnchor.constraint(equalToConstant: 25)
+        ])
+        
         addSubview(backView)
         backView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -72,7 +109,6 @@ class SwipeableCard: UIView {
             backView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
         ])
         
-        // Add label to back view
         backView.addSubview(infoLabel)
         infoLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -100,50 +136,36 @@ class SwipeableCard: UIView {
         }
     }
 
-    private func fetchCardData() {
-        print("Attempting to fetch data from Realtime Database...")
+    // Update card with product information, including product name
+    func updateCard(with product: [String: Any], name: String) {
+        let brand = product["Brand"] as? String ?? "Unknown Brand"
+        let description = product["Description"] as? String ?? "No description available"
+        let gender = product["Gender"] as? String ?? "Unisex"
+        let price = product["Price"] as? Int ?? 0
+        let category = product["Product Category"] as? String ?? "Unknown Category"
+        let sizes = product["Sizes"] as? String ?? "Sizes not available"
+
+        // Update the product name and brand labels on the front
+        DispatchQueue.main.async {
+            self.productNameLabel.text = name
+            self.brandLabel.text = brand
+        }
+
+        let productInfo = """
+        Brand: \(brand)
+        Description: \(description)
+        Gender: \(gender)
+        Price: $\(price)
+        Category: \(category)
+        Sizes: \(sizes)
+        """
         
-        let ref = Database.database().reference()
-        let userRef = ref.child("users").child("user1").child("name")
-        
-        userRef.observeSingleEvent(of: .value) { [weak self] snapshot in
-            guard let self = self else {
-                print("Self is nil, exiting fetchCardData")
-                return
-            }
-            
-            if let userName = snapshot.value as? String {
-                print("User Name: \(userName)")
-                DispatchQueue.main.async {
-                    self.infoLabel.text = userName
-                }
-            } else {
-                print("User Name field not found in Realtime Database.")
-            }
-        } withCancel: { error in
-            print("Failed to fetch data: \(error.localizedDescription)")
+        // Update the label text on the back view
+        DispatchQueue.main.async {
+            self.infoLabel.text = productInfo
         }
     }
-
     
-    @objc private func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
-        let translation = gesture.translation(in: self.superview)
-        self.center = CGPoint(x: self.center.x + translation.x, y: self.center.y + translation.y)
-        gesture.setTranslation(CGPoint.zero, in: self.superview)
-
-        if gesture.state == .ended {
-            if self.center.x < 100 {
-                swipeOffScreen(direction: .left)
-            } else if self.center.x > (self.superview?.frame.width ?? 0) - 100 {
-                swipeOffScreen(direction: .right)
-            } else {
-                UIView.animate(withDuration: 0.3) {
-                    self.center = self.superview!.center
-                }
-            }
-        }
-    }
-
     func swipeOffScreen(direction: SwipeDirection) {
         let offScreenPoint: CGPoint
 
