@@ -13,14 +13,13 @@ struct SwipeViewControllerRepresentable: UIViewControllerRepresentable {
         return vc
     }
 
-    func updateUIViewController(_ uiViewController: ViewController, context: Context) {
-        
-    }
+    func updateUIViewController(_ uiViewController: ViewController, context: Context) {}
 }
 
 struct ContentView: View {
     @State private var viewController: ViewController? = nil  // Store the reference to ViewController
     @State private var showSplashScreen = true  // State to manage splash screen visibility
+    @State private var selectedTab = 0  // State for TabView navigation
 
     var body: some View {
         ZStack {
@@ -28,11 +27,43 @@ struct ContentView: View {
                 SplashScreenView()
                     .transition(.opacity)  // Add a fade transition effect
             } else {
-                MainContentView(viewController: $viewController)
+                TabView(selection: $selectedTab) {
+                    // Main Home (Swipe) Page
+                    MainContentView(viewController: $viewController)
+                        .tabItem {
+                            Image(systemName: "house.fill")
+                            Text("Home")
+                        }
+                        .tag(0)
+
+                    // Placeholder for Favorites View
+                    Text("Favorites")
+                        .tabItem {
+                            Image(systemName: "heart.fill")
+                            Text("Favorites")
+                        }
+                        .tag(1)
+
+                    // Placeholder for Cart View
+                    Text("Cart")
+                        .tabItem {
+                            Image(systemName: "cart.fill")
+                            Text("Cart")
+                        }
+                        .tag(2)
+
+                    // Profile Page (Link to ProfileView in ProfileView.swift)
+                    ProfileView()  // This links to ProfileView.swift
+                        .tabItem {
+                            Image(systemName: "person.fill")
+                            Text("Profile")
+                        }
+                        .tag(3)
+                }
             }
         }
         .onAppear {
-            // Hide splash screen after 1 second
+            // Hide splash screen after 2 seconds
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                 withAnimation {
                     showSplashScreen = false
@@ -64,7 +95,6 @@ struct MainContentView: View {
     
     var body: some View {
         VStack {
-            
             // Add the logo at the top-left corner
             HStack {
                 Image("StyleSwipe log")
@@ -76,13 +106,13 @@ struct MainContentView: View {
                     .padding(.bottom, 10)
                 Spacer()
             }
-            
+
             Spacer()
-            
+
             SwipeViewControllerRepresentable(viewController: $viewController)
                 .frame(height: 500)
                 .padding(.bottom, -100)
-                            
+
             Spacer()
 
             // SwiftUI Buttons for 'like' and 'dislike'
@@ -108,7 +138,7 @@ struct MainContentView: View {
                                 .stroke(Color.black, lineWidth: 2)
                         )
                 }
-                
+
                 Spacer()
 
                 Button(action: {
@@ -137,40 +167,6 @@ struct MainContentView: View {
             .frame(maxWidth: .infinity, alignment: .center)
             .padding(.bottom, 30)
             .padding(.top, 30)
-
-            // TabView to switch pages
-            TabView {
-                Image(systemName: "house.fill")
-                    .resizable()
-                    .scaledToFit()
-                    .tabItem {
-                        Image(systemName: "house.fill")
-                    }
-
-                Image(systemName: "heart.fill")
-                    .resizable()
-                    .scaledToFit()
-                    .tabItem {
-                        Image(systemName: "heart.fill")
-                    }
-
-                Image(systemName: "cart.fill")
-                    .resizable()
-                    .scaledToFit()
-                    .tabItem {
-                        Image(systemName: "cart.fill")
-                    }
-
-                Image(systemName: "person.fill")
-                    .resizable()
-                    .scaledToFit()
-                    .tabItem {
-                        Image(systemName: "person.fill")
-                    }
-            }
-            .frame(height: 60)
-            .padding(.bottom, -100)
-            .padding(.top, 60)
         }
         .padding()
         .navigationBarHidden(true)

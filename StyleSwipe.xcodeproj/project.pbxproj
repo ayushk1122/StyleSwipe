@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		42969A642CBEF656009A4ED3 /* LoginSignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42969A632CBEF656009A4ED3 /* LoginSignUpView.swift */; };
+		42F3CD492CCC1F1B000B7308 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42F3CD482CCC1F1B000B7308 /* ProfileView.swift */; };
+		42F3CD4B2CD1F9E2000B7308 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42F3CD4A2CD1F9E2000B7308 /* SettingsView.swift */; };
+		42F3CD4D2CD1FA0A000B7308 /* PreferencesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42F3CD4C2CD1FA0A000B7308 /* PreferencesView.swift */; };
+		42F3CD4F2CD1FA3E000B7308 /* MyOrdersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42F3CD4E2CD1FA3E000B7308 /* MyOrdersView.swift */; };
+		42F3CD512CD1FA67000B7308 /* ContactSupportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42F3CD502CD1FA67000B7308 /* ContactSupportView.swift */; };
 		833F47112CAD905E00248B3E /* SwipeableCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833F47102CAD905E00248B3E /* SwipeableCard.swift */; };
 		833F47132CAD907800248B3E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 833F47122CAD907800248B3E /* ViewController.swift */; };
 		839658D62C94BC8A00689BE9 /* StyleSwipeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839658D52C94BC8A00689BE9 /* StyleSwipeApp.swift */; };
@@ -50,6 +55,11 @@
 
 /* Begin PBXFileReference section */
 		42969A632CBEF656009A4ED3 /* LoginSignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSignUpView.swift; sourceTree = "<group>"; };
+		42F3CD482CCC1F1B000B7308 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		42F3CD4A2CD1F9E2000B7308 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		42F3CD4C2CD1FA0A000B7308 /* PreferencesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesView.swift; sourceTree = "<group>"; };
+		42F3CD4E2CD1FA3E000B7308 /* MyOrdersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyOrdersView.swift; sourceTree = "<group>"; };
+		42F3CD502CD1FA67000B7308 /* ContactSupportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactSupportView.swift; sourceTree = "<group>"; };
 		833F47102CAD905E00248B3E /* SwipeableCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeableCard.swift; sourceTree = "<group>"; };
 		833F47122CAD907800248B3E /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		839658D22C94BC8A00689BE9 /* StyleSwipe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StyleSwipe.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -134,6 +144,11 @@
 				833F47102CAD905E00248B3E /* SwipeableCard.swift */,
 				833F47122CAD907800248B3E /* ViewController.swift */,
 				42969A632CBEF656009A4ED3 /* LoginSignUpView.swift */,
+				42F3CD482CCC1F1B000B7308 /* ProfileView.swift */,
+				42F3CD4A2CD1F9E2000B7308 /* SettingsView.swift */,
+				42F3CD4C2CD1FA0A000B7308 /* PreferencesView.swift */,
+				42F3CD4E2CD1FA3E000B7308 /* MyOrdersView.swift */,
+				42F3CD502CD1FA67000B7308 /* ContactSupportView.swift */,
 			);
 			path = StyleSwipe;
 			sourceTree = "<group>";
@@ -299,9 +314,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				42F3CD492CCC1F1B000B7308 /* ProfileView.swift in Sources */,
 				833F47132CAD907800248B3E /* ViewController.swift in Sources */,
 				42969A642CBEF656009A4ED3 /* LoginSignUpView.swift in Sources */,
+				42F3CD4F2CD1FA3E000B7308 /* MyOrdersView.swift in Sources */,
+				42F3CD4B2CD1F9E2000B7308 /* SettingsView.swift in Sources */,
 				833F47112CAD905E00248B3E /* SwipeableCard.swift in Sources */,
+				42F3CD4D2CD1FA0A000B7308 /* PreferencesView.swift in Sources */,
+				42F3CD512CD1FA67000B7308 /* ContactSupportView.swift in Sources */,
 				839658D62C94BC8A00689BE9 /* StyleSwipeApp.swift in Sources */,
 				839658D82C94BC8A00689BE9 /* Persistence.swift in Sources */,
 				839658DD2C94BC8A00689BE9 /* ContentView.swift in Sources */,
