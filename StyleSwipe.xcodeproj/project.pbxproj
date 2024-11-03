@@ -24,6 +24,8 @@
 		839658ED2C94BC8E00689BE9 /* StyleSwipeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839658EC2C94BC8E00689BE9 /* StyleSwipeTests.swift */; };
 		839658F72C94BC8E00689BE9 /* StyleSwipeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839658F62C94BC8E00689BE9 /* StyleSwipeUITests.swift */; };
 		839658F92C94BC8E00689BE9 /* StyleSwipeUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 839658F82C94BC8E00689BE9 /* StyleSwipeUITestsLaunchTests.swift */; };
+		DE8F34722CD7F32600E4BDA5 /* FavoritesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8F34712CD7F32600E4BDA5 /* FavoritesView.swift */; };
+		DE8F34742CD7FD7000E4BDA5 /* FavoriteCardDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8F34732CD7FD7000E4BDA5 /* FavoriteCardDetailView.swift */; };
 		DE95304A2CCA8D8400994C4D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DE9530492CCA8D8400994C4D /* GoogleService-Info.plist */; };
 		DE95304B2CCA8D8400994C4D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DE9530492CCA8D8400994C4D /* GoogleService-Info.plist */; };
 		DE95304C2CCA8D8400994C4D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DE9530492CCA8D8400994C4D /* GoogleService-Info.plist */; };
@@ -75,6 +77,8 @@
 		839658F22C94BC8E00689BE9 /* StyleSwipeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StyleSwipeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		839658F62C94BC8E00689BE9 /* StyleSwipeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleSwipeUITests.swift; sourceTree = "<group>"; };
 		839658F82C94BC8E00689BE9 /* StyleSwipeUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleSwipeUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		DE8F34712CD7F32600E4BDA5 /* FavoritesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesView.swift; sourceTree = "<group>"; };
+		DE8F34732CD7FD7000E4BDA5 /* FavoriteCardDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCardDetailView.swift; sourceTree = "<group>"; };
 		DE9530492CCA8D8400994C4D /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -135,6 +139,7 @@
 			children = (
 				DE9530492CCA8D8400994C4D /* GoogleService-Info.plist */,
 				839658D52C94BC8A00689BE9 /* StyleSwipeApp.swift */,
+				DE8F34712CD7F32600E4BDA5 /* FavoritesView.swift */,
 				839658D72C94BC8A00689BE9 /* Persistence.swift */,
 				839658DC2C94BC8A00689BE9 /* ContentView.swift */,
 				839658DE2C94BC8C00689BE9 /* Assets.xcassets */,
@@ -149,6 +154,7 @@
 				42F3CD4C2CD1FA0A000B7308 /* PreferencesView.swift */,
 				42F3CD4E2CD1FA3E000B7308 /* MyOrdersView.swift */,
 				42F3CD502CD1FA67000B7308 /* ContactSupportView.swift */,
+				DE8F34732CD7FD7000E4BDA5 /* FavoriteCardDetailView.swift */,
 			);
 			path = StyleSwipe;
 			sourceTree = "<group>";
@@ -316,6 +322,7 @@
 			files = (
 				42F3CD492CCC1F1B000B7308 /* ProfileView.swift in Sources */,
 				833F47132CAD907800248B3E /* ViewController.swift in Sources */,
+				DE8F34722CD7F32600E4BDA5 /* FavoritesView.swift in Sources */,
 				42969A642CBEF656009A4ED3 /* LoginSignUpView.swift in Sources */,
 				42F3CD4F2CD1FA3E000B7308 /* MyOrdersView.swift in Sources */,
 				42F3CD4B2CD1F9E2000B7308 /* SettingsView.swift in Sources */,
@@ -326,6 +333,7 @@
 				839658D82C94BC8A00689BE9 /* Persistence.swift in Sources */,
 				839658DD2C94BC8A00689BE9 /* ContentView.swift in Sources */,
 				839658DB2C94BC8A00689BE9 /* StyleSwipe.xcdatamodeld in Sources */,
+				DE8F34742CD7FD7000E4BDA5 /* FavoriteCardDetailView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

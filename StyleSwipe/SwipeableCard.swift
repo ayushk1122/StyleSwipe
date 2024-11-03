@@ -54,8 +54,11 @@ class SwipeableCard: UIView {
     let sizesLabel = UILabel()
     
     var isFlipped = false
-    
-    override init(frame: CGRect) {
+    var isMinimized = false  // To track minimized state
+
+    // Initialize SwipeableCard with minimized option
+    init(frame: CGRect = .zero, isMinimized: Bool = false) {
+        self.isMinimized = isMinimized
         super.init(frame: frame)
         setupView()
         setupTapGesture()
@@ -78,11 +81,14 @@ class SwipeableCard: UIView {
         // Image container and image
         addSubview(imageContainerView)
         imageContainerView.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Adjust constraints based on minimized state
+        let imageContainerBottomSpacing: CGFloat = isMinimized ? -40 : -80
         NSLayoutConstraint.activate([
             imageContainerView.topAnchor.constraint(equalTo: self.topAnchor, constant: 20),
             imageContainerView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20),
             imageContainerView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20),
-            imageContainerView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -80)
+            imageContainerView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: imageContainerBottomSpacing)
         ])
         
         imageContainerView.addSubview(imageView)
@@ -95,21 +101,25 @@ class SwipeableCard: UIView {
         ])
         
         addSubview(productNameLabel)
-        addSubview(brandLabel)
-        
         productNameLabel.translatesAutoresizingMaskIntoConstraints = false
-        brandLabel.translatesAutoresizingMaskIntoConstraints = false
         
+        // Display or hide brand label based on minimized state
+        if !isMinimized {
+            addSubview(brandLabel)
+            brandLabel.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                brandLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10),
+                brandLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),
+                brandLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10),
+                brandLabel.heightAnchor.constraint(equalToConstant: 25)
+            ])
+        }
+
         NSLayoutConstraint.activate([
-            productNameLabel.bottomAnchor.constraint(equalTo: brandLabel.topAnchor, constant: -5),
+            productNameLabel.bottomAnchor.constraint(equalTo: brandLabel.topAnchor, constant: isMinimized ? -5 : -10),
             productNameLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),
             productNameLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10),
-            productNameLabel.heightAnchor.constraint(equalToConstant: 30),
-            
-            brandLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10),
-            brandLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),
-            brandLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10),
-            brandLabel.heightAnchor.constraint(equalToConstant: 25)
+            productNameLabel.heightAnchor.constraint(equalToConstant: isMinimized ? 20 : 30)
         ])
         
         addSubview(backView)
@@ -125,6 +135,7 @@ class SwipeableCard: UIView {
     }
     
     private func setupBackViewLabels() {
+        guard !isMinimized else { return }  // Hide back view labels for minimized view
         let labels = [brandInfoLabel, descriptionLabel, genderLabel, priceLabel, categoryLabel, sizesLabel]
         
         for label in labels {
@@ -180,7 +191,6 @@ class SwipeableCard: UIView {
         }
     }
 
-    // Update card with product information
     func updateCard(with product: [String: Any], name: String) {
         let brand = product["Brand"] as? String ?? "Unknown Brand"
         let description = product["Description"] as? String ?? "No description available"
@@ -194,12 +204,14 @@ class SwipeableCard: UIView {
             self.productNameLabel.text = name
             self.brandLabel.text = brand
             
-            self.brandInfoLabel.text = "Brand: \(brand)"
-            self.descriptionLabel.text = "Description: \(description)"
-            self.genderLabel.text = "Gender: \(gender)"
-            self.priceLabel.text = "Price: $\(price)"
-            self.categoryLabel.text = "Category: \(category)"
-            self.sizesLabel.text = "Available Sizes: \(sizes)"
+            if !self.isMinimized {
+                self.brandInfoLabel.text = "Brand: \(brand)"
+                self.descriptionLabel.text = "Description: \(description)"
+                self.genderLabel.text = "Gender: \(gender)"
+                self.priceLabel.text = "Price: $\(price)"
+                self.categoryLabel.text = "Category: \(category)"
+                self.sizesLabel.text = "Available Sizes: \(sizes)"
+            }
         }
 
         if let imageURLString = imageURLString, let imageURL = URL(string: imageURLString) {

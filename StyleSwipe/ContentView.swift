@@ -1,43 +1,64 @@
 import SwiftUI
+import Foundation
+import Combine
+
+struct FavoriteProduct: Identifiable {
+    let id: UUID
+    let name: String
+    let details: [String: Any]
+}
+
+class FavoritesManager: ObservableObject {
+    @Published var favoritedProducts: [FavoriteProduct] = []
+    
+    func addFavorite(product: (name: String, details: [String: Any])) {
+        let newFavorite = FavoriteProduct(id: UUID(), name: product.name, details: product.details)
+        favoritedProducts.append(newFavorite)
+    }
+
+    func removeProduct(byID id: UUID) {
+        favoritedProducts.removeAll { $0.id == id }
+    }
+}
+
 
 struct SwipeViewControllerRepresentable: UIViewControllerRepresentable {
-    @Binding var viewController: ViewController?  // Binding to pass the instance to SwiftUI
+    @Binding var viewController: ViewController?  // Binding to pass instance to SwiftUI
+    var favoritesManager: FavoritesManager  // Pass the favorites manager
 
     func makeUIViewController(context: Context) -> ViewController {
-        let vc = ViewController()  // Create the ViewController instance
-        viewController = vc        // Assign it to the binding
-        DispatchQueue.main.async {
-            self.viewController = vc  // Ensure the ViewController is assigned
-            print("ViewController created and assigned (async)")
-        }
+        let vc = ViewController(favoritesManager: favoritesManager)  // Initialize with FavoritesManager
+        viewController = vc  // Assign it to the binding
         return vc
     }
 
     func updateUIViewController(_ uiViewController: ViewController, context: Context) {}
 }
 
+
 struct ContentView: View {
-    @State private var viewController: ViewController? = nil  // Store the reference to ViewController
-    @State private var showSplashScreen = true  // State to manage splash screen visibility
-    @State private var selectedTab = 0  // State for TabView navigation
+    @StateObject private var favoritesManager = FavoritesManager()  // Shared favorites manager
+    @State private var viewController: ViewController? = nil
+    @State private var showSplashScreen = true
+    @State private var selectedTab = 0
 
     var body: some View {
         ZStack {
             if showSplashScreen {
                 SplashScreenView()
-                    .transition(.opacity)  // Add a fade transition effect
+                    .transition(.opacity)
             } else {
                 TabView(selection: $selectedTab) {
                     // Main Home (Swipe) Page
-                    MainContentView(viewController: $viewController)
+                    MainContentView(viewController: $viewController, favoritesManager: favoritesManager)
                         .tabItem {
                             Image(systemName: "house.fill")
                             Text("Home")
                         }
                         .tag(0)
 
-                    // Placeholder for Favorites View
-                    Text("Favorites")
+                    // Favorites View
+                    FavoritesView(favoritesManager: favoritesManager)
                         .tabItem {
                             Image(systemName: "heart.fill")
                             Text("Favorites")
@@ -52,8 +73,8 @@ struct ContentView: View {
                         }
                         .tag(2)
 
-                    // Profile Page (Link to ProfileView in ProfileView.swift)
-                    ProfileView()  // This links to ProfileView.swift
+                    // Profile Page
+                    ProfileView()
                         .tabItem {
                             Image(systemName: "person.fill")
                             Text("Profile")
@@ -63,7 +84,6 @@ struct ContentView: View {
             }
         }
         .onAppear {
-            // Hide splash screen after 2 seconds
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                 withAnimation {
                     showSplashScreen = false
@@ -72,6 +92,9 @@ struct ContentView: View {
         }
     }
 }
+
+
+
 
 struct SplashScreenView: View {
     var body: some View {
@@ -92,7 +115,8 @@ struct SplashScreenView: View {
 
 struct MainContentView: View {
     @Binding var viewController: ViewController?
-    
+    var favoritesManager: FavoritesManager  // Add favoritesManager here
+
     var body: some View {
         VStack {
             // Add the logo at the top-left corner
@@ -109,7 +133,8 @@ struct MainContentView: View {
 
             Spacer()
 
-            SwipeViewControllerRepresentable(viewController: $viewController)
+            // Pass favoritesManager to SwipeViewControllerRepresentable
+            SwipeViewControllerRepresentable(viewController: $viewController, favoritesManager: favoritesManager)
                 .frame(height: 500)
                 .padding(.bottom, -100)
 
@@ -172,6 +197,7 @@ struct MainContentView: View {
         .navigationBarHidden(true)
     }
 }
+
 
 #Preview {
     ContentView()
