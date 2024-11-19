@@ -17,11 +17,6 @@ struct CheckoutView: View {
     var body: some View {
         NavigationView {
             VStack(alignment: .leading) {
-                Text("Checkout")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .padding()
-
                 TextField("Credit Card Number", text: $creditCard)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
