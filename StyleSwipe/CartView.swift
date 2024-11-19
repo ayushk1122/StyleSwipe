@@ -11,7 +11,7 @@ struct CartView: View {
                 .fontWeight(.bold)
                 .padding()
 
-            // List of cart items
+            // List of cart items with swipe-to-delete
             List {
                 ForEach(cartManager.cartProducts) { product in
                     HStack {
@@ -44,7 +44,9 @@ struct CartView: View {
                         }
                     }
                 }
+                .onDelete(perform: removeItems)
             }
+            .listStyle(InsetGroupedListStyle())
 
             // Total Price and Checkout Button
             HStack {
@@ -72,6 +74,15 @@ struct CartView: View {
         }
     }
 
+    // Function to handle swipe-to-delete
+    private func removeItems(at offsets: IndexSet) {
+        for index in offsets {
+            let product = cartManager.cartProducts[index]
+            cartManager.removeFromCart(byID: product.id)
+        }
+    }
+
+    // Helper function to load image from URL
     private func loadImage(from urlString: String) -> UIImage? {
         guard let url = URL(string: urlString), let data = try? Data(contentsOf: url) else { return nil }
         return UIImage(data: data)
