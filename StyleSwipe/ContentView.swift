@@ -76,7 +76,7 @@ struct ContentView: View {
                         .tag(2)
 
                     // User Profile Page (Renamed)
-                    UserProfileView()
+                    ProfileView()
                         .tabItem {
                             Image(systemName: "person.fill")
                             Text("Profile")
