@@ -1,12 +1,12 @@
 import SwiftUI
 
 struct SettingsView: View {
-    // State variables to store user inputs
-    @State private var phoneNumber: String = ""
-    @State private var email: String = ""
-    @State private var shippingAddress: String = ""
-    @State private var creditCardNumber: String = ""
-    @State private var billingAddress: String = ""
+    // State variables to store user inputs with default values from UserDefaults
+    @State private var phoneNumber: String = UserDefaults.standard.string(forKey: "phoneNumber") ?? ""
+    @State private var email: String = UserDefaults.standard.string(forKey: "email") ?? ""
+    @State private var shippingAddress: String = UserDefaults.standard.string(forKey: "shippingAddress") ?? ""
+    @State private var creditCardNumber: String = UserDefaults.standard.string(forKey: "creditCardNumber") ?? ""
+    @State private var billingAddress: String = UserDefaults.standard.string(forKey: "billingAddress") ?? ""
 
     var body: some View {
         NavigationView {
@@ -45,9 +45,32 @@ struct SettingsView: View {
                 .padding(.horizontal, 20)
 
                 Spacer()
+
+                // Black Save Settings Button moved up
+                Button(action: saveSettings) {
+                    Text("Save Settings")
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.black) // Set button background to black
+                        .cornerRadius(8)
+                }
+                .padding(.horizontal, 20)
+                .padding(.bottom, 40) // Adjusted padding to move it up a bit
             }
             .navigationBarTitleDisplayMode(.inline)
         }
+    }
+    
+    // Function to handle saving entered information to UserDefaults
+    func saveSettings() {
+        UserDefaults.standard.set(phoneNumber, forKey: "phoneNumber")
+        UserDefaults.standard.set(email, forKey: "email")
+        UserDefaults.standard.set(shippingAddress, forKey: "shippingAddress")
+        UserDefaults.standard.set(creditCardNumber, forKey: "creditCardNumber")
+        UserDefaults.standard.set(billingAddress, forKey: "billingAddress")
+        
+        print("Settings saved.")
     }
 }
 
