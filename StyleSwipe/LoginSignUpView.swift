@@ -1,4 +1,5 @@
 import SwiftUI
+import FirebaseAuth
 
 struct LoginSignUpView: View {
     @State private var isLogin = true // Toggle between Login and Sign Up
@@ -9,6 +10,8 @@ struct LoginSignUpView: View {
     @State private var phoneNumber = ""
     @State private var email = ""
     @State private var gender = ""
+    @State private var errorMessage = ""
+    @State private var isLoggedIn = false
 
     var body: some View {
         NavigationView {
@@ -52,8 +55,14 @@ struct LoginSignUpView: View {
                 }
                 .padding(.top, 20)
 
-                // Navigate to Home Page Button
-                NavigationLink(destination: ContentView()) {
+                // Login or Sign Up Button
+                Button(action: {
+                    if isLogin {
+                        logInUser()
+                    } else {
+                        signUpUser()
+                    }
+                }) {
                     Text(isLogin ? "Login" : "Sign Up")
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
@@ -63,9 +72,23 @@ struct LoginSignUpView: View {
                 }
                 .padding(.horizontal, 30)
                 .padding(.top, 20)
-                .padding(.bottom, 30)
+
+                // Error Message
+                if !errorMessage.isEmpty {
+                    Text(errorMessage)
+                        .foregroundColor(.red)
+                        .font(.footnote)
+                        .padding(.top, 10)
+                }
 
                 Spacer()
+
+                // Navigate to Home Page when logged in
+                if isLoggedIn {
+                    NavigationLink(destination: ContentView(), isActive: $isLoggedIn) {
+                        EmptyView()
+                    }
+                }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .padding()
@@ -75,7 +98,7 @@ struct LoginSignUpView: View {
     // Login Fields View with Bold Borders
     var loginFields: some View {
         VStack(spacing: 15) {
-            textFieldWithBoldBorder(placeholder: "Username", text: $username)
+            textFieldWithBoldBorder(placeholder: "Email", text: $email)
             textFieldWithBoldBorder(placeholder: "Password", text: $password, isSecure: true)
         }
     }
@@ -87,7 +110,7 @@ struct LoginSignUpView: View {
             textFieldWithBoldBorder(placeholder: "Last Name", text: $lastName)
             textFieldWithBoldBorder(placeholder: "Phone Number", text: $phoneNumber)
             textFieldWithBoldBorder(placeholder: "Email", text: $email)
-            textFieldWithBoldBorder(placeholder: "Gender", text: $gender)
+            textFieldWithBoldBorder(placeholder: "Password", text: $password, isSecure: true)
         }
     }
 
@@ -114,6 +137,31 @@ struct LoginSignUpView: View {
                         .stroke(Color.black, lineWidth: 2) // Bold border
                 )
                 .padding(.horizontal, 30)
+        }
+    }
+
+    // Firebase Authentication Functions
+    func signUpUser() {
+        Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
+            if let error = error {
+                self.errorMessage = "Sign Up Failed: \(error.localizedDescription)"
+            } else {
+                self.errorMessage = ""
+                self.isLoggedIn = true
+                print("Sign Up Successful!")
+            }
+        }
+    }
+
+    func logInUser() {
+        Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
+            if let error = error {
+                self.errorMessage = "Login Failed: \(error.localizedDescription)"
+            } else {
+                self.errorMessage = ""
+                self.isLoggedIn = true
+                print("Login Successful!")
+            }
         }
     }
 }
