@@ -1,7 +1,9 @@
 import SwiftUI
+import FirebaseAuth
 
 struct ProfileView: View {
     @ObservedObject var orderManager: OrderManager  // Pass OrderManager to manage orders
+    @State private var currentUserEmail: String? = nil  // State to hold the user's email or username
 
     var body: some View {
         NavigationView {
@@ -19,7 +21,8 @@ struct ProfileView: View {
 
                 // Username and Profile Picture
                 VStack(spacing: 15) {
-                    Text("User")  // Username
+                    // Display the user's email or a placeholder if not available
+                    Text(currentUserEmail ?? "Guest")
                         .font(.title)
                         .fontWeight(.bold)
                         .padding(.top, 20)
@@ -56,7 +59,17 @@ struct ProfileView: View {
 
                 Spacer()
             }
+            .onAppear(perform: fetchCurrentUser)
             .navigationBarHidden(true)
+        }
+    }
+
+    // Fetch the currently signed-in user's email
+    private func fetchCurrentUser() {
+        if let user = Auth.auth().currentUser {
+            currentUserEmail = user.email
+        } else {
+            currentUserEmail = "Guest"  // Placeholder for unsigned users
         }
     }
 }
