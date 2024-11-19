@@ -21,23 +21,25 @@ class FavoritesManager: ObservableObject {
     }
 }
 
-
-struct SwipeViewControllerRepresentable: UIViewControllerRepresentable {
-    @Binding var viewController: ViewController?  // Binding to pass instance to SwiftUI
-    var favoritesManager: FavoritesManager  // Pass the favorites manager
-
-    func makeUIViewController(context: Context) -> ViewController {
-        let vc = ViewController(favoritesManager: favoritesManager)  // Initialize with FavoritesManager
-        viewController = vc  // Assign it to the binding
-        return vc
+class CartManager: ObservableObject {
+    @Published var cartProducts: [FavoriteProduct] = []
+    
+    func addToCart(product: FavoriteProduct) {
+        cartProducts.append(product)
     }
 
-    func updateUIViewController(_ uiViewController: ViewController, context: Context) {}
-}
+    func removeFromCart(byID id: UUID) {
+        cartProducts.removeAll { $0.id == id }
+    }
 
+    func totalPrice() -> Double {
+        return cartProducts.compactMap { $0.details["Price"] as? Double }.reduce(0, +)
+    }
+}
 
 struct ContentView: View {
     @StateObject private var favoritesManager = FavoritesManager()  // Shared favorites manager
+    @StateObject private var cartManager = CartManager()  // Shared cart manager
     @State private var viewController: ViewController? = nil
     @State private var showSplashScreen = true
     @State private var selectedTab = 0
@@ -58,22 +60,22 @@ struct ContentView: View {
                         .tag(0)
 
                     // Favorites View
-                    FavoritesView(favoritesManager: favoritesManager)
+                    FavoritesView(favoritesManager: favoritesManager, cartManager: cartManager)
                         .tabItem {
                             Image(systemName: "heart.fill")
                             Text("Favorites")
                         }
                         .tag(1)
 
-                    // Placeholder for Cart View
-                    Text("Cart")
+                    // Cart View
+                    CartView(cartManager: cartManager)
                         .tabItem {
                             Image(systemName: "cart.fill")
                             Text("Cart")
                         }
                         .tag(2)
 
-                    // Profile Page
+                    // User Profile Page (Renamed)
                     ProfileView()
                         .tabItem {
                             Image(systemName: "person.fill")
@@ -92,9 +94,6 @@ struct ContentView: View {
         }
     }
 }
-
-
-
 
 struct SplashScreenView: View {
     var body: some View {
@@ -198,6 +197,26 @@ struct MainContentView: View {
     }
 }
 
+struct SwipeViewControllerRepresentable: UIViewControllerRepresentable {
+    @Binding var viewController: ViewController?  // Binding to pass instance to SwiftUI
+    var favoritesManager: FavoritesManager  // Pass the favorites manager
+
+    func makeUIViewController(context: Context) -> ViewController {
+        let vc = ViewController(favoritesManager: favoritesManager)  // Initialize with FavoritesManager
+        viewController = vc  // Assign it to the binding
+        return vc
+    }
+
+    func updateUIViewController(_ uiViewController: ViewController, context: Context) {}
+}
+
+// Renamed from ProfileView to UserProfileView to avoid conflict
+struct UserProfileView: View {
+    var body: some View {
+        Text("Profile Page")
+            .font(.title)
+    }
+}
 
 #Preview {
     ContentView()
