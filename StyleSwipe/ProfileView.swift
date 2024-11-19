@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct ProfileView: View {
+    @ObservedObject var orderManager: OrderManager  // Pass OrderManager to manage orders
+
     var body: some View {
         NavigationView {
             VStack {
@@ -41,7 +43,8 @@ struct ProfileView: View {
                         ProfileOptionButton(title: "Preferences", hasArrow: true)
                     }
                     
-                    NavigationLink(destination: MyOrdersView()) {
+                    // Navigate to MyOrdersView with orderManager
+                    NavigationLink(destination: MyOrdersView(orderManager: orderManager)) {
                         ProfileOptionButton(title: "My Orders", hasArrow: true)
                     }
                     
@@ -87,6 +90,5 @@ struct ProfileOptionButton: View {
 }
 
 #Preview {
-    ProfileView()
+    ProfileView(orderManager: OrderManager())  // Provide OrderManager instance for preview
 }
-

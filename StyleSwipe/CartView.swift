@@ -2,6 +2,10 @@ import SwiftUI
 
 struct CartView: View {
     @ObservedObject var cartManager: CartManager
+    @ObservedObject var orderManager: OrderManager  // New manager for orders
+    @State private var showCheckoutModal = false
+    @State private var creditCard = ""
+    @State private var address = ""
 
     var body: some View {
         VStack {
@@ -58,7 +62,7 @@ struct CartView: View {
                 Spacer()
 
                 Button(action: {
-                    print("Proceed to Checkout")
+                    self.showCheckoutModal = true
                 }) {
                     Text("Checkout")
                         .font(.headline)
@@ -72,9 +76,17 @@ struct CartView: View {
             }
             .padding()
         }
+        .sheet(isPresented: $showCheckoutModal) {
+            CheckoutView(
+                cartManager: cartManager,
+                orderManager: orderManager,
+                creditCard: $creditCard,
+                address: $address,
+                showCheckoutModal: $showCheckoutModal
+            )
+        }
     }
 
-    // Function to handle swipe-to-delete
     private func removeItems(at offsets: IndexSet) {
         for index in offsets {
             let product = cartManager.cartProducts[index]
@@ -82,7 +94,6 @@ struct CartView: View {
         }
     }
 
-    // Helper function to load image from URL
     private func loadImage(from urlString: String) -> UIImage? {
         guard let url = URL(string: urlString), let data = try? Data(contentsOf: url) else { return nil }
         return UIImage(data: data)
