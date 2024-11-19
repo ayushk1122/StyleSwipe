@@ -1,14 +1,8 @@
-//
-//  FavoritesView.swift
-//  StyleSwipe
-//
-//  Created by Rylan Wade on 11/3/24.
-//
-
 import SwiftUI
 
 struct FavoritesView: View {
     @ObservedObject var favoritesManager: FavoritesManager
+    @ObservedObject var cartManager: CartManager
     @State private var selectedProduct: FavoriteProduct?  // Track selected product for overlay
 
     let columns = [
@@ -19,20 +13,28 @@ struct FavoritesView: View {
     var body: some View {
         ZStack {
             // Main content with favorites grid
-            ScrollView {
-                LazyVGrid(columns: columns, spacing: 20) {
-                    ForEach(favoritesManager.favoritedProducts) { product in
-                        MinimizedCardView(name: product.name, details: product.details)
-                            .frame(width: 160, height: 240)
-                            .background(Color.white)
-                            .cornerRadius(10)
-                            .shadow(radius: 5)
-                            .onTapGesture {
-                                selectedProduct = product  // Set selected product for overlay
-                            }
+            VStack {
+                // Title header
+                Text("My Favorites")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .padding(.top, 20)
+                
+                ScrollView {
+                    LazyVGrid(columns: columns, spacing: 20) {
+                        ForEach(favoritesManager.favoritedProducts) { product in
+                            MinimizedCardView(name: product.name, details: product.details)
+                                .frame(width: 160, height: 240)
+                                .background(Color.white)
+                                .cornerRadius(10)
+                                .shadow(radius: 5)
+                                .onTapGesture {
+                                    selectedProduct = product  // Set selected product for overlay
+                                }
+                        }
                     }
+                    .padding()
                 }
-                .padding()
             }
             .navigationTitle("Favorites")
             
@@ -42,6 +44,25 @@ struct FavoritesView: View {
                     .ignoresSafeArea()  // Dimmed background for overlay
 
                 VStack {
+                    // Add a back arrow or "X" in the top-left corner
+                    HStack {
+                        Button(action: {
+                            self.selectedProduct = nil  // Dismiss overlay
+                        }) {
+                            Image(systemName: "arrow.left") // Simplistic back arrow
+                                .font(.title2)
+                                .foregroundColor(.black)
+                                .padding()
+                        }
+                        .padding(.leading, 20)
+                        .padding(.top, 40)
+                        
+                        Spacer()
+                    }
+                    
+                    Spacer()
+                    
+                    // Display the item image
                     if let image = loadImage(from: selectedProduct.details["Clothing AWS URL"] as? String) {
                         Image(uiImage: image)
                             .resizable()
@@ -57,41 +78,50 @@ struct FavoritesView: View {
                             .padding()
                     }
 
-                    Spacer()
-                    
-                    // Cleaner button styles for actions
-                    HStack(spacing: 30) {
-                        Button(action: {
-                            // Implement add to cart functionality here
-                            print("Add to Cart tapped")
-                        }) {
-                            Label("Add to Cart", systemImage: "cart")
-                                .font(.headline)
-                                .padding()
-                                .frame(width: 140)
-                                .background(Color.white)
-                                .cornerRadius(12)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .stroke(Color.blue, lineWidth: 1)
-                                )
+                    // Add a descriptive overlay below the image
+                    VStack(spacing: 8) {
+                        Text(selectedProduct.details["Brand"] as? String ?? "Unknown Brand")
+                            .font(.headline)
+                            .foregroundColor(.black)
+
+                        Text(selectedProduct.name)
+                            .font(.title2)
+                            .fontWeight(.medium)
+                            .foregroundColor(.black)
+
+                        if let price = selectedProduct.details["Price"] as? Double {
+                            Text(String(format: "$%.2f", price))
+                                .font(.title3)
+                                .fontWeight(.bold)
+                                .foregroundColor(.green)
                         }
-                        
+                    }
+                    .padding(.horizontal)
+                    .padding(.bottom, 20)
+
+                    Spacer()
+
+                    // Icons for actions
+                    HStack(spacing: 50) {
                         Button(action: {
-                            // Remove from favorites using unique identifier
+                            // Add to Cart functionality
+                            cartManager.addToCart(product: selectedProduct)  // Add to Cart
+                            favoritesManager.removeProduct(byID: selectedProduct.id)  // Remove from Favorites
+                            self.selectedProduct = nil  // Dismiss overlay
+                        }) {
+                            Image(systemName: "cart")
+                                .font(.system(size: 30, weight: .regular))
+                                .foregroundColor(.black)
+                        }
+
+                        Button(action: {
+                            // Remove from favorites
                             favoritesManager.removeProduct(byID: selectedProduct.id)
                             self.selectedProduct = nil  // Dismiss overlay
                         }) {
-                            Label("Remove", systemImage: "heart.slash")
-                                .font(.headline)
-                                .padding()
-                                .frame(width: 140)
-                                .background(Color.white)
-                                .cornerRadius(12)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .stroke(Color.red, lineWidth: 1)
-                                )
+                            Image(systemName: "trash")
+                                .font(.system(size: 30, weight: .regular))
+                                .foregroundColor(.black)
                         }
                     }
                     .padding(.bottom, 40)
@@ -100,9 +130,6 @@ struct FavoritesView: View {
                 .background(Color.white)
                 .cornerRadius(20)
                 .padding()
-                .onTapGesture {
-                    self.selectedProduct = nil  // Dismiss overlay on background tap
-                }
             }
         }
     }
@@ -114,11 +141,6 @@ struct FavoritesView: View {
         return UIImage(data: data)
     }
 }
-
-
-
-
-
 
 struct MinimizedCardView: View {
     let name: String
