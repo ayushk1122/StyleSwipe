@@ -39,6 +39,8 @@
 		DEED5E702CEC1E9D008CFAC2 /* CartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEED5E6F2CEC1E9D008CFAC2 /* CartView.swift */; };
 		DEED5E732CEC2F04008CFAC2 /* OrderManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEED5E722CEC2F04008CFAC2 /* OrderManager.swift */; };
 		DEED5E752CEC2F92008CFAC2 /* CheckoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEED5E742CEC2F92008CFAC2 /* CheckoutView.swift */; };
+		DEED5E772CED209A008CFAC2 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = DEED5E762CED209A008CFAC2 /* FirebaseAuth */; };
+		DEED5E792CED209A008CFAC2 /* FirebaseAuthCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = DEED5E782CED209A008CFAC2 /* FirebaseAuthCombine-Community */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -94,12 +96,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				DE95304F2CCA8DF600994C4D /* FirebaseAnalytics in Frameworks */,
+				DEED5E792CED209A008CFAC2 /* FirebaseAuthCombine-Community in Frameworks */,
 				DE9530532CCA8DF600994C4D /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
 				DE9530552CCA8DF600994C4D /* FirebaseCore in Frameworks */,
 				DE9530592CCA8DF600994C4D /* FirebaseFirestoreCombine-Community in Frameworks */,
 				DE9530572CCA8DF600994C4D /* FirebaseFirestore in Frameworks */,
 				DE95305C2CCA90BC00994C4D /* FirebaseDatabase in Frameworks */,
 				DE9530512CCA8DF600994C4D /* FirebaseAnalyticsOnDeviceConversion in Frameworks */,
+				DEED5E772CED209A008CFAC2 /* FirebaseAuth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -749,6 +753,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = DE95304D2CCA8DF600994C4D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseDatabase;
+		};
+		DEED5E762CED209A008CFAC2 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DE95304D2CCA8DF600994C4D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		DEED5E782CED209A008CFAC2 /* FirebaseAuthCombine-Community */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DE95304D2CCA8DF600994C4D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = "FirebaseAuthCombine-Community";
 		};
 /* End XCSwiftPackageProductDependency section */
 
