@@ -40,6 +40,7 @@ class CartManager: ObservableObject {
 struct ContentView: View {
     @StateObject private var favoritesManager = FavoritesManager()  // Shared favorites manager
     @StateObject private var cartManager = CartManager()  // Shared cart manager
+    @StateObject private var orderManager = OrderManager()  // Shared order manager
     @State private var viewController: ViewController? = nil
     @State private var showSplashScreen = true
     @State private var selectedTab = 0
@@ -68,15 +69,15 @@ struct ContentView: View {
                         .tag(1)
 
                     // Cart View
-                    CartView(cartManager: cartManager)
+                    CartView(cartManager: cartManager, orderManager: orderManager)
                         .tabItem {
                             Image(systemName: "cart.fill")
                             Text("Cart")
                         }
                         .tag(2)
 
-                    // User Profile Page (Renamed)
-                    ProfileView()
+                    // User Profile Page with My Orders
+                    ProfileView(orderManager: orderManager)
                         .tabItem {
                             Image(systemName: "person.fill")
                             Text("Profile")
@@ -208,14 +209,6 @@ struct SwipeViewControllerRepresentable: UIViewControllerRepresentable {
     }
 
     func updateUIViewController(_ uiViewController: ViewController, context: Context) {}
-}
-
-// Renamed from ProfileView to UserProfileView to avoid conflict
-struct UserProfileView: View {
-    var body: some View {
-        Text("Profile Page")
-            .font(.title)
-    }
 }
 
 #Preview {
