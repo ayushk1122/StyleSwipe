@@ -5,29 +5,25 @@ struct PreferencesView: View {
     @State private var selectedSizes: [String] = []
     @State private var selectedClothingTypes: [String] = []
     @State private var selectedGenderOptions: [String] = []
-    @State private var price: Double = 50
+    @State private var price: Double = 200
 
     // Options for dropdowns
     let sizeOptions = ["XS", "S", "M", "L", "XL", "XXL"]
     let clothingTypeOptions = ["Shorts", "Pants", "Jackets", "Shoes", "Shirts", "Hats", "Tops", "Jeans", "Other"]
     let genderOptions = ["Male", "Female", "Neutral"]
 
+    // Environment variable to dismiss the view
+    @Environment(\.dismiss) var dismiss
+
     var body: some View {
         NavigationView {
             VStack(alignment: .leading, spacing: 20) {
-                // Centered Header
-                Text("Preferences")
-                    .font(.title)
-                    .fontWeight(.bold)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .padding(.top)
-
                 // Size Preference
                 VStack(alignment: .leading, spacing: 5) {
                     Text("Size")
                         .font(.subheadline)
                         .padding(.leading)
-                    
+
                     MultipleSelectionList(title: "Select Sizes", options: sizeOptions, selections: $selectedSizes)
                 }
 
@@ -42,7 +38,7 @@ struct PreferencesView: View {
 
                 // Price Range Preference
                 VStack(alignment: .leading, spacing: 5) {
-                    Text("Price: $\(Int(price))")
+                    Text("Price: ≤ $\(Int(price))")
                         .font(.subheadline)
                         .padding(.leading)
 
@@ -63,7 +59,59 @@ struct PreferencesView: View {
                 Spacer()
             }
             .padding(.top)
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarTitle("Preferences", displayMode: .inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: savePreferencesAndClose) {
+                        Text("Save")
+                            .fontWeight(.bold)
+                            .foregroundColor(.blue)
+                    }
+                }
+            }
+            .onAppear {
+                loadPreferencesLocally()
+            }
+        }
+    }
+
+    // Save preferences locally using UserDefaults and dismiss the view
+    func savePreferencesAndClose() {
+        let preferences: [String: Any] = [
+            "sizes": selectedSizes,
+            "clothingTypes": selectedClothingTypes,
+            "gender": selectedGenderOptions,
+            "price": Int(price)
+        ]
+
+        UserDefaults.standard.set(preferences, forKey: "userPreferences")
+        print("Preferences saved locally.")
+        dismiss() // Close the preferences view
+    }
+
+    // Load preferences from UserDefaults
+    func loadPreferencesLocally() {
+        if let preferences = UserDefaults.standard.dictionary(forKey: "userPreferences") {
+            selectedSizes = preferences["sizes"] as? [String] ?? []
+            selectedClothingTypes = preferences["clothingTypes"] as? [String] ?? []
+            selectedGenderOptions = preferences["gender"] as? [String] ?? []
+            price = Double(preferences["price"] as? Int ?? 200)
+            print("Preferences loaded locally.")
+        } else {
+            // Initialize default preferences
+            selectedSizes = sizeOptions
+            selectedClothingTypes = clothingTypeOptions
+            selectedGenderOptions = genderOptions
+            price = 200
+
+            let defaultPreferences: [String: Any] = [
+                "sizes": sizeOptions,
+                "clothingTypes": clothingTypeOptions,
+                "gender": genderOptions,
+                "price": 200
+            ]
+            UserDefaults.standard.set(defaultPreferences, forKey: "userPreferences")
+            print("Default preferences initialized.")
         }
     }
 }
@@ -73,7 +121,7 @@ struct MultipleSelectionList: View {
     let title: String
     let options: [String]
     @Binding var selections: [String]
-    
+
     var body: some View {
         DisclosureGroup(title) {
             ForEach(options, id: \.self) { option in
@@ -88,7 +136,7 @@ struct MultipleSelectionList: View {
 struct MultipleSelectionRow: View {
     let option: String
     @Binding var selections: [String]
-    
+
     var body: some View {
         Button(action: {
             if selections.contains(option) {
