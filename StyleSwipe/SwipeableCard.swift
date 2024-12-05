@@ -18,23 +18,19 @@ class SwipeableCard: UIView {
     
     let brandLabel: UILabel = {
         let label = UILabel()
-        label.textAlignment = .center
+        label.textAlignment = .left
         label.textColor = .white
-        label.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
-        label.backgroundColor = UIColor.black.withAlphaComponent(0.5)
-        label.layer.cornerRadius = 5
-        label.clipsToBounds = true
+        label.font = UIFont.systemFont(ofSize: 14, weight: .medium)
+        label.numberOfLines = 1
         return label
     }()
-    
+
     let productNameLabel: UILabel = {
         let label = UILabel()
-        label.textAlignment = .center
+        label.textAlignment = .left
         label.textColor = .white
-        label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
-        label.backgroundColor = UIColor.black.withAlphaComponent(0.7)
-        label.layer.cornerRadius = 5
-        label.clipsToBounds = true
+        label.font = UIFont.systemFont(ofSize: 18, weight: .bold)
+        label.numberOfLines = 0
         return label
     }()
     
@@ -81,14 +77,11 @@ class SwipeableCard: UIView {
         // Image container and image
         addSubview(imageContainerView)
         imageContainerView.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Adjust constraints based on minimized state
-        let imageContainerBottomSpacing: CGFloat = isMinimized ? -40 : -80
         NSLayoutConstraint.activate([
-            imageContainerView.topAnchor.constraint(equalTo: self.topAnchor, constant: 20),
-            imageContainerView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20),
-            imageContainerView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20),
-            imageContainerView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: imageContainerBottomSpacing)
+            imageContainerView.topAnchor.constraint(equalTo: self.topAnchor),
+            imageContainerView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            imageContainerView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            imageContainerView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
         ])
         
         imageContainerView.addSubview(imageView)
@@ -100,28 +93,28 @@ class SwipeableCard: UIView {
             imageView.trailingAnchor.constraint(equalTo: imageContainerView.trailingAnchor)
         ])
         
+        // Add gradient overlay for cleaner look
+        addGradientOverlay()
+
+        // Add productNameLabel
         addSubview(productNameLabel)
         productNameLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Display or hide brand label based on minimized state
-        if !isMinimized {
-            addSubview(brandLabel)
-            brandLabel.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                brandLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10),
-                brandLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),
-                brandLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10),
-                brandLabel.heightAnchor.constraint(equalToConstant: 25)
-            ])
-        }
-
         NSLayoutConstraint.activate([
-            productNameLabel.bottomAnchor.constraint(equalTo: brandLabel.topAnchor, constant: isMinimized ? -5 : -10),
-            productNameLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),
-            productNameLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10),
-            productNameLabel.heightAnchor.constraint(equalToConstant: isMinimized ? 20 : 30)
+            productNameLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -20),
+            productNameLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20),
+            productNameLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20)
         ])
-        
+
+        // Add brandLabel
+        addSubview(brandLabel)
+        brandLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            brandLabel.bottomAnchor.constraint(equalTo: productNameLabel.topAnchor, constant: -5),
+            brandLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20),
+            brandLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20)
+        ])
+
+        // Add backView
         addSubview(backView)
         backView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -208,8 +201,9 @@ class SwipeableCard: UIView {
                 self.brandInfoLabel.text = "Brand: \(brand)"
                 self.descriptionLabel.text = "Description: \(description)"
                 self.genderLabel.text = "Gender: \(gender)"
-                self.priceLabel.text = "Price: $\(price)"
+                self.priceLabel.text = "Price: \(price)"
                 self.categoryLabel.text = "Category: \(category)"
+                self.sizesLabel.text = "Available Sizes: \(sizes)"
                 self.sizesLabel.text = "Available Sizes: \(sizes)"
             }
         }
@@ -242,6 +236,14 @@ class SwipeableCard: UIView {
         }, completion: { _ in
             self.removeFromSuperview()
         })
+    }
+    
+    private func addGradientOverlay() {
+        let gradient = CAGradientLayer()
+        gradient.colors = [UIColor.clear.cgColor, UIColor.black.withAlphaComponent(0.7).cgColor]
+        gradient.locations = [0.0, 1.0]
+        gradient.frame = self.bounds
+        imageView.layer.addSublayer(gradient)
     }
 }
 
