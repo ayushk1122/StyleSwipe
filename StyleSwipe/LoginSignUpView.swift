@@ -139,12 +139,19 @@ struct LoginSignUpView: View {
                 .padding(.horizontal, 30)
         }
     }
+    
+    func showTemporaryErrorMessage(_ message: String) {
+        self.errorMessage = message
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { // Display for 3 seconds
+            self.errorMessage = ""
+        }
+    }
 
     // Firebase Authentication Functions
     func signUpUser() {
         Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
             if let error = error {
-                self.errorMessage = "Sign Up Failed: \(error.localizedDescription)"
+                showTemporaryErrorMessage("Sign Up Failed: \(error.localizedDescription)")
             } else {
                 self.errorMessage = ""
                 self.isLoggedIn = true
@@ -156,7 +163,7 @@ struct LoginSignUpView: View {
     func logInUser() {
         Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
             if let error = error {
-                self.errorMessage = "Login Failed: \(error.localizedDescription)"
+                showTemporaryErrorMessage("Login Failed: \(error.localizedDescription)")
             } else {
                 self.errorMessage = ""
                 self.isLoggedIn = true
